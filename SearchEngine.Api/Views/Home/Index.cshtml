@@ -1,0 +1,97 @@
+﻿
+@{
+    ViewBag.Title = "Search From Web";
+}
+
+<div class="container mt-2">
+    <div class="card col-6 mx-auto px-0">
+        <h5 class="card-header info-color white-text text-center py-4">
+            <strong>Search From Web</strong>
+        </h5>
+        <div class="card-body px-lg-5 pt-0">
+            <form id="form" class="text-center" style="color: #757575;" action="#">
+                <div class="md-form">
+                    <input type="text" id="query" class="form-control">
+                    <label for="query">Type text to search</label>
+                </div>
+
+                <button type="submit" class="btn btn-info btn-block my-2">Search</button> 
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-4 d-none" id="results">
+    <h3 class="text-center blue-text mb-4">Results from <span id="service_name"></span></h3>
+    <div class="card p-2">
+        <table class="table table-hover" id="table">
+            <thead class="blue white-text">
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Headline</th>
+                    <th scope="col">Modified Date</th>
+                    <th scope="col">Url</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr></tr>
+            </tbody>
+            <tfoot class="blue white-text">
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Headline</th>
+                    <th scope="col">Modified Date</th>
+                    <th scope="col">Url</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#form").submit(function () {
+            let query = $('#query').val().trim();
+            if (query == null || query == '')
+                return;
+
+            $('body').addClass('loading');
+
+            //remove data
+            $("#table tbody").each(function () {
+                $(this).children("tr").remove();
+            });
+
+            //send request
+            $.get("/api/v1/SearchEngine/Search?query=" + query, function (data, status) {
+                if (status != 'success' || data == null || data.Code != 0 || data.Data == null || data.Data.length <= 0)
+                    return $('body').removeClass('loading');
+
+                //append data
+                for (var i = 0; i < data.Data.length; i++) {
+                    let item = data.Data[i];
+                    $('#table tbody').append('<tr>' +
+                        '<td>'+item.Title+'</td>' +
+                        '<td>'+item.Headline+'</td>' +
+                        '<td>'+item.ModifiedDate+'</td>' +
+                        '<td><a class="link btn-link" target="_blank" href="'+item.Url+'">Link</a></td>' +
+                    '</tr>');
+                }
+
+                $('#service_name').html(data.Data[0].ServiceName);
+
+                activateDataTable();
+                $('#results').removeClass('d-none');
+                $('body').removeClass('loading');
+            });
+        });
+    });
+
+    function activateDataTable() {
+        $(document).ready(function () {
+            $('#table').DataTable();
+            $('.dataTables_length').addClass('bs-select');
+        });
+    }
+</script>

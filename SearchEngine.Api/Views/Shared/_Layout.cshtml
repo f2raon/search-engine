@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Search Engine</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/mdb.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/style.css" rel="stylesheet" type="text/css" />
+
+    <script src="~/Scripts/jquery.min.js"></script>
+</head>
+<body class="fixed-sn deep-purple-skin">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark primary-color">
+            <a class="navbar-brand" href="/">Search Engine</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbar" aria-controls="navbar" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        @Html.ActionLink("Search from Web", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Search from Results", "Filter", "Home", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <footer>
+        <div class="footer-copyright py-3 text-center">
+            <div class="container-fluid">
+                © @DateTime.Now.Year Copyright: <a href="mailto:f2raon@gmail.com"> f2raon</a>
+
+            </div>
+        </div>
+    </footer>
+
+    <div class="loader "></div>
+    <script src="~/Scripts/popper.js"></script>
+    <script src="~/Scripts/datatables2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/mdb.min.js"></script>
+</body>
+</html>

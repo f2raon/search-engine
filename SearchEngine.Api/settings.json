@@ -1,0 +1,17 @@
+{
+  "Google": {
+    "Url": "https://www.googleapis.com/customsearch/v1",
+    "Id": "000024214252175360847:bx6b8vhu1l0",
+    "Key": "AIzaSyARMk0VdTTNPFMfJ6znunDvRerMyITY-Nw"
+  },
+  "Yandex": {
+    "Url": "https://yandex.com/search/xml",
+    "Id": "f2raon@gmail.com",
+    "Key": "03.1144026667:1c842084743e0eb461899870e21499ae"
+  },
+  "Bing": {
+    "Url": "",
+    "Id": "38836970-cb28-4006-86e2-bcfae61a9f8f",
+    "Key": "90af0cc07e96478c9ad74435444d10c1"
+  }
+}
