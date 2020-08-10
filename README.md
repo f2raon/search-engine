@@ -18,3 +18,7 @@ Technology stack
 4.ORM -> EntityFramework
 5.For DB I'm used Code First approach, hence there are not any sql scripts...
 6.local DB MS SQL run in MS SQL 2008+
+
+
+P.S.
+For Yandex search i have to change ip address in yandex.xml console..
