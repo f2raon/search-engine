@@ -9,12 +9,15 @@ using System;
 using Swashbuckle.Swagger.Annotations;
 using System.Net;
 using SearchEngine.DAL.Interfaces;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace SearchEngine.Api.Controllers
 {
     public class SearchController : ApiController
     {
         private IDataLoad dataLoad;
+        private IDataInsert dataInsert;
 
         [HttpGet, Route("api/v1/SearchEngine/Search")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ResponseModel<List<SearchResultModel>>), Description = "Search")]
@@ -27,34 +30,27 @@ namespace SearchEngine.Api.Controllers
             {
                 #region setting tasks
                 GlobalSettings.GetAppSettings();
-                SearchHelper helper = new SearchHelper(new DataInsertRepo());
-                var yandex = helper.SetTask(new YandexSearchEngineService(), "Yandex", query);
-                var google = helper.SetTask(new GoogleSearchEngineService(), "Google", query);
-                var bing = helper.SetTask(new BingSearchEngineService(), "Bing", query);
+                dataInsert = new DataInsertRepo();
+
+                var yandex = SearchHelper.SetTask(new YandexSearchEngineService(), "Yandex", query);
+                var google = SearchHelper.SetTask(new GoogleSearchEngineService(), "Google", query);
+                var bing = SearchHelper.SetTask(new BingSearchEngineService(), "Bing", query);
+
+                Task<ResponseModel<IList<SearchResultModel>>>[] tasks = new Task<ResponseModel<IList<SearchResultModel>>>[3] 
+                { 
+                    yandex, google, bing
+                };
+
+                int a = Task.WaitAny(tasks);
+                var result = tasks[a].Result;
                 #endregion
 
-                #region start tasks and wait
-                yandex.Start();
-                bing.Start();
-                google.Start();
-
-                yandex.Wait();
-                bing.Wait();
-                google.Wait();
+                #region save data
+                if (result.Code == 0 && result.Data.Count > 0)
+                    dataInsert.InsertSearchResults(result.Data.ToList());
                 #endregion
 
-                #region prepare results
-                int code = 1;
-                string msg = "no data found";
-
-                if (helper.searchResults.Count > 0)
-                {
-                    code = 0;
-                    msg = "ok";
-                }
-                #endregion
-
-                return Ok(new ResponseModel<List<SearchResultModel>>(code, msg, helper.serviceName, helper.searchResults));
+                return Ok(result);
             }
             catch (Exception ex)
             {
