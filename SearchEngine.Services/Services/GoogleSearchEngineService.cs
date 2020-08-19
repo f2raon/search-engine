@@ -22,7 +22,7 @@ namespace SearchEngine.Services.Services
         public string Url { get; set; }
         #endregion
 
-        public ResponseModel<IList<SearchResultModel>> Search(string query)
+        public async Task<ResponseModel<IList<SearchResultModel>>> Search(string query)
         {
             List<SearchResultModel> list = new List<SearchResultModel>();
             ResponseModel<IList<SearchResultModel>> response = new ResponseModel<IList<SearchResultModel>>(1, string.Empty, string.Empty, list);
@@ -36,9 +36,8 @@ namespace SearchEngine.Services.Services
 
                 #region request and response
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(completeUrl);
-                HttpWebResponse res = (HttpWebResponse)request.GetResponse();
 
-                var httpResponse = (HttpWebResponse)request.GetResponse();
+                var httpResponse = await request.GetResponseAsync();
                 string result;
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {

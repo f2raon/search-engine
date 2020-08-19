@@ -5,6 +5,7 @@ using SearchEngine.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SearchEngine.Services.Services
 {
@@ -17,7 +18,7 @@ namespace SearchEngine.Services.Services
         public string Url { get; set; }
         #endregion
 
-        public ResponseModel<IList<SearchResultModel>> Search(string query)
+        public async Task<ResponseModel<IList<SearchResultModel>>> Search(string query)
         {
             List<SearchResultModel> list = new List<SearchResultModel>();
             ResponseModel<IList<SearchResultModel>> response = new ResponseModel<IList<SearchResultModel>>(1, string.Empty, string.Empty, list);
@@ -26,7 +27,7 @@ namespace SearchEngine.Services.Services
             {
                 #region query
                 var client = new CustomSearchClient(new ApiKeyServiceClientCredentials(Key));
-                var webData = client.CustomInstance.SearchAsync(query: query, customConfig: Id).Result;
+                var webData = await client.CustomInstance.SearchAsync(query: query, customConfig: Id);
                 #endregion
 
                 #region prepare data

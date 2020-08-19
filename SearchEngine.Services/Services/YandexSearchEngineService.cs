@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -31,7 +32,7 @@ namespace SearchEngine.Services.Services
             }
         }
 
-        public ResponseModel<IList<SearchResultModel>> Search(string query)
+        public async Task<ResponseModel<IList<SearchResultModel>>> Search(string query)
         {
             List<SearchResultModel> list = new List<SearchResultModel>();
             ResponseModel<IList<SearchResultModel>> response = new ResponseModel<IList<SearchResultModel>>(1, string.Empty, string.Empty, list);
@@ -44,13 +45,13 @@ namespace SearchEngine.Services.Services
                 #endregion
 
                 #region request and response
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(completeUrl);
-                HttpWebResponse res = (HttpWebResponse)request.GetResponse();
+                var request = (HttpWebRequest)WebRequest.Create(completeUrl);
+                var res = await request.GetResponseAsync();
                 #endregion
 
                 #region parse to xml document
-                XmlReader xmlReader = XmlReader.Create(res.GetResponseStream());
-                XDocument xmlResponse = XDocument.Load(xmlReader);
+                var xmlReader = XmlReader.Create(res.GetResponseStream());
+                var xmlResponse = XDocument.Load(xmlReader);
                 #endregion
 
                 #region get data from xml document

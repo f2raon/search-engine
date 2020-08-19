@@ -36,18 +36,19 @@ namespace SearchEngine.Api.Controllers
                 var google = SearchHelper.SetTask(new GoogleSearchEngineService(), "Google", query);
                 var bing = SearchHelper.SetTask(new BingSearchEngineService(), "Bing", query);
 
-                Task<ResponseModel<IList<SearchResultModel>>>[] tasks = new Task<ResponseModel<IList<SearchResultModel>>>[3] 
+                var tasks = new Task<ResponseModel<IList<SearchResultModel>>>[3] 
                 { 
                     yandex, google, bing
                 };
+                tasks.AsParallel();
 
-                int a = Task.WaitAny(tasks);
-                var result = tasks[a].Result;
+                var finishedTask = tasks.WaitForFirstCompleted();
+                var result = finishedTask.Result;
                 #endregion
 
                 #region save data
                 if (result.Code == 0 && result.Data.Count > 0)
-                    dataInsert.InsertSearchResults(result.Data.ToList());
+                    Task.Factory.StartNew(() => dataInsert.InsertSearchResults(result.Data.ToList()));
                 #endregion
 
                 return Ok(result);

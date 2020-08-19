@@ -9,7 +9,6 @@ namespace SearchEngine.Api.Helpers
     {
         public static AppSettings Settings { get; set; }
 
-
         public static void GetAppSettings()
         {
             try

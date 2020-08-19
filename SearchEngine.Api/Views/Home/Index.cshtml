@@ -9,7 +9,7 @@
             <strong>Search From Web</strong>
         </h5>
         <div class="card-body px-lg-5 pt-0">
-            <form id="form" class="text-center" style="color: #757575;" action="#">
+            <form id="form" class="text-center" style="color: #757575;">
                 <div class="md-form">
                     <input type="text" id="query" class="form-control">
                     <label for="query">Type text to search</label>
@@ -51,7 +51,8 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        $("#form").submit(function () {
+        $("#form").submit(function (e) {
+            e.preventDefault();
             let query = $('#query').val().trim();
             if (query == null || query == '')
                 return;

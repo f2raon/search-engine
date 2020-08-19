@@ -1,5 +1,6 @@
 ﻿using SearchEngine.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SearchEngine.Services.Interfaces
 {
@@ -33,6 +34,6 @@ namespace SearchEngine.Services.Interfaces
         /// </summary>
         /// <param name="query">searhc query text</param>
         /// <returns></returns>
-        ResponseModel<IList<SearchResultModel>> Search(string query);
+        Task<ResponseModel<IList<SearchResultModel>>> Search(string query);
     }
 }
